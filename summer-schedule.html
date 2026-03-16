@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer 2026 — Game Plan</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #F8F9FA; color: #2D3436; }
+
+  /* NAV */
+  .nav { position: sticky; top: 0; z-index: 100; background: white; border-bottom: 1px solid #E9ECEF; padding: 12px 24px; display: flex; align-items: center; gap: 12px; overflow-x: auto; }
+  .nav-btn { padding: 8px 18px; border-radius: 20px; border: none; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.15s; background: #F1F3F5; color: #636E72; }
+  .nav-btn:hover { background: #E9ECEF; }
+  .nav-btn.active { background: #2D3436; color: white; }
+
+  /* SECTIONS */
+  .section { display: none; max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; }
+  .section.active { display: block; }
+  .section-header { margin-bottom: 32px; }
+  .section-header h2 { font-family: 'Fredoka', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 6px; }
+  .section-header p { color: #636E72; font-size: 0.95rem; }
+
+  /* DAILY ROUTINE */
+  .timeline { position: relative; padding-left: 48px; }
+  .timeline::before { content: ''; position: absolute; left: 18px; top: 8px; bottom: 8px; width: 3px; background: linear-gradient(to bottom, #74B9FF, #A29BFE, #FD79A8, #FDCB6E, #55EFC4); border-radius: 3px; }
+  .time-block { position: relative; margin-bottom: 20px; background: white; border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .time-block::before { content: ''; position: absolute; left: -38px; top: 22px; width: 14px; height: 14px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #74B9FF; }
+  .time-block .time { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #74B9FF; margin-bottom: 4px; }
+  .time-block h4 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+  .time-block p { font-size: 0.88rem; color: #636E72; line-height: 1.6; }
+  .time-block.editable-block { border: 2px dashed #DFE6E9; background: #FAFAFA; }
+  .time-block.editable-block h4 { color: #B2BEC3; }
+
+  /* WEEKLY THEMES */
+  .week-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .day-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.05); transition: transform 0.15s, box-shadow 0.15s; }
+  .day-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,0.1); }
+  .day-top { padding: 18px 20px; display: flex; align-items: center; gap: 14px; }
+  .day-emoji { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .day-top h3 { font-family: 'Fredoka', sans-serif; font-size: 1.15rem; font-weight: 600; line-height: 1.2; }
+  .day-top .day-name { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; opacity: 0.7; }
+  .day-body { padding: 0 20px 20px; }
+  .act-list { list-style: none; }
+  .act-list li { padding: 7px 0; border-bottom: 1px solid #F1F3F5; font-size: 0.88rem; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+  .act-list li:last-child { border-bottom: none; }
+  .dot { flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; margin-top: 7px; }
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+  .mon .day-top { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); } .mon .day-emoji { background: #4CAF50; color: white; } .mon .day-top h3, .mon .day-name { color: #2E7D32; } .mon .dot { background: #4CAF50; } .mon .tag { background: #E8F5E9; color: #2E7D32; }
+  .tue .day-top { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); } .tue .day-emoji { background: #1E88E5; color: white; } .tue .day-top h3, .tue .day-name { color: #1565C0; } .tue .dot { background: #1E88E5; } .tue .tag { background: #E3F2FD; color: #1565C0; }
+  .wed .day-top { background: linear-gradient(135deg, #E0F7FA, #B2EBF2); } .wed .day-emoji { background: #00ACC1; color: white; } .wed .day-top h3, .wed .day-name { color: #00838F; } .wed .dot { background: #00ACC1; } .wed .tag { background: #E0F7FA; color: #00838F; }
+  .thu .day-top { background: linear-gradient(135deg, #F3E5F5, #E1BEE7); } .thu .day-emoji { background: #8E24AA; color: white; } .thu .day-top h3, .thu .day-name { color: #6A1B9A; } .thu .dot { background: #8E24AA; } .thu .tag { background: #F3E5F5; color: #6A1B9A; }
+  .fri .day-top { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); } .fri .day-emoji { background: #FB8C00; color: white; } .fri .day-top h3, .fri .day-name { color: #E65100; } .fri .dot { background: #FB8C00; } .fri .tag { background: #FFF3E0; color: #E65100; }
+
+  /* SIGN-UP ACTIVITIES */
+  .signup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .signup-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border-left: 5px solid; }
+  .signup-card.climbing { border-color: #E74C3C; }
+  .signup-card.horses { border-color: #8E44AD; }
+  .signup-card.gymnastics { border-color: #2ECC71; }
+  .signup-card.cooking { border-color: #F39C12; }
+  .signup-card.art { border-color: #3498DB; }
+  .signup-card.dance { border-color: #E91E63; }
+  .signup-card.swim { border-color: #00BCD4; }
+  .signup-card h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .signup-card .location { font-size: 0.82rem; color: #636E72; margin-bottom: 10px; }
+  .signup-card .detail { font-size: 0.85rem; line-height: 1.6; color: #2D3436; margin-bottom: 10px; }
+  .signup-card .action-tag { display: inline-block; padding: 4px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .action-tag.book { background: #FFEAA7; color: #D68910; }
+  .action-tag.research { background: #DFE6E9; color: #636E72; }
+  .action-tag.drop-in { background: #D5F5E3; color: #27AE60; }
+  .signup-card a { color: #3498DB; text-decoration: none; font-weight: 600; font-size: 0.85rem; }
+  .signup-card a:hover { text-decoration: underline; }
+
+  /* SHOPPING LIST */
+  .shop-category { margin-bottom: 28px; }
+  .shop-category h4 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #636E72; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #F1F3F5; }
+  .shop-list { list-style: none; }
+  .shop-list li { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: white; border-radius: 10px; margin-bottom: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .shop-list li input[type=checkbox] { width: 20px; height: 20px; accent-color: #00B894; flex-shrink: 0; cursor: pointer; }
+  .shop-list li .item-name { font-size: 0.9rem; font-weight: 500; flex: 1; }
+  .shop-list li a { font-size: 0.78rem; color: #3498DB; text-decoration: none; font-weight: 600; white-space: nowrap; }
+  .shop-list li a:hover { text-decoration: underline; }
+
+  /* OUTDOOR SPOTS */
+  .spots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .spot-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .spot-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+  .spot-card p { font-size: 0.85rem; color: #636E72; line-height: 1.5; }
+  .spot-card .free-tag { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; background: #D5F5E3; color: #27AE60; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* NOTES */
+  .notes-box { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); margin-top: 24px; }
+  .notes-box h3 { font-family: 'Fredoka', sans-serif; font-size: 1.2rem; margin-bottom: 12px; }
+  .notes-area { width: 100%; min-height: 100px; border: 2px dashed #DFE6E9; border-radius: 10px; padding: 14px; font-family: 'Inter', sans-serif; font-size: 0.9rem; resize: vertical; outline: none; }
+  .notes-area:focus { border-color: #74B9FF; }
+
+  /* BIRTHDAY CALLOUT */
+  .birthday-banner { background: linear-gradient(135deg, #FD79A8, #FDCB6E, #55EFC4); border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: center; color: white; }
+  .birthday-banner h3 { font-family: 'Fredoka', sans-serif; font-size: 1.4rem; text-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+  .birthday-banner p { font-size: 0.92rem; opacity: 0.95; margin-top: 4px; }
+
+  @media print { .nav { display: none; } .section { display: block !important; page-break-before: always; } }
+  @media (max-width: 720px) { .section-header h2 { font-size: 1.5rem; } .week-grid, .signup-grid, .spots-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('routine')">Daily Routine</button>
+  <button class="nav-btn" onclick="showSection('weekly')">Weekly Themes</button>
+  <button class="nav-btn" onclick="showSection('signups')">Sign-Up Activities</button>
+  <button class="nav-btn" onclick="showSection('outdoors')">Outdoor Spots</button>
+  <button class="nav-btn" onclick="showSection('shopping')">Shopping List</button>
+  <button class="nav-btn" onclick="showSection('notes')">Notes</button>
+</div>
+
+<!-- ==================== DAILY ROUTINE ==================== -->
+<div class="section active" id="routine">
+  <div class="section-header">
+    <h2>Daily Routine (8am &ndash; 3pm)</h2>
+    <p>The daily flow with Emma. Adjust times based on activity days.</p>
+  </div>
+  <div class="timeline">
+    <div class="time-block"><div class="time">8:00 AM</div><h4>Arrival &amp; Breakfast Wrap-Up</h4><p>Emma arrives. Girls finish breakfast, get dressed, sunscreen. Quick chat about the day&rsquo;s plan.</p></div>
+    <div class="time-block"><div class="time">8:30 &ndash; 9:00 AM</div><h4>Morning Learning Block</h4><p>Phonics flash cards, reading practice, or workbook time (Tues &amp; Thurs). Other days: free play / art / puzzles while Emma preps for the outing.</p></div>
+    <div class="time-block"><div class="time">9:00 &ndash; 11:30 AM</div><h4>Main Activity</h4><p>This is the big block &mdash; park day, museum trip, swimming, science kit, climbing class, or whatever&rsquo;s on the weekly plan.</p></div>
+    <div class="time-block"><div class="time">11:30 AM &ndash; 12:15 PM</div><h4>Lunch</h4><p>Out on adventure days (Monday). Home lunch on other days. Keep it simple &mdash; sandwiches, fruit, snacks.</p></div>
+    <div class="time-block"><div class="time">12:15 &ndash; 1:00 PM</div><h4>Quiet Time / Rest</h4><p>Wind down after lunch. Audiobook, coloring, calm play. Recharge for the afternoon.</p></div>
+    <div class="time-block"><div class="time">1:00 &ndash; 2:30 PM</div><h4>Afternoon Activity</h4><p>Pool / water play on swim days. Reading &amp; learning on academic days. Free play, crafts, or backyard time on other days.</p></div>
+    <div class="time-block"><div class="time">2:30 &ndash; 3:00 PM</div><h4>Clean Up &amp; Wrap</h4><p>Tidy up, pack away supplies, quick snack. Emma wraps up for the day.</p></div>
+    <div class="time-block editable-block"><div class="time">YOUR ADDITION</div><h4>Add another time block...</h4><p>Anything else you want built into the daily flow? Tell me and I&rsquo;ll add it.</p></div>
+  </div>
+</div>
+
+<!-- ==================== WEEKLY THEMES ==================== -->
+<div class="section" id="weekly">
+  <div class="section-header">
+    <h2>Weekly Themes</h2>
+    <p>Emma&rsquo;s day-by-day structure. Each day has a theme so it&rsquo;s easy to plan around.</p>
+  </div>
+
+  <div class="birthday-banner">
+    <h3>June 28 &mdash; Birthday!</h3>
+    <p>Turning 6! Plan something special for this week.</p>
+  </div>
+
+  <div class="week-grid">
+    <!-- MONDAY -->
+    <div class="day-card mon">
+      <div class="day-top"><div class="day-emoji">&#127795;</div><div><div class="day-name">Monday</div><h3>Nature &amp; Outside Adventures</h3></div></div>
+      <div class="day-body">
+        <span class="tag">Explore + Lunch Out</span>
+        <p style="font-size:0.8rem; color:#636E72; font-style:italic; margin-bottom:10px;">Cleaners come Mondays &mdash; great day to be out of the house</p>
+        <ul class="act-list">
+          <li><span class="dot"></span>Parks: Laurel Hills, Cary Park, Dorothea Dix, Pullen Park</li>
+          <li><span class="dot"></span>NC Museum of Natural Sciences (DT Raleigh)</li>
+          <li><span class="dot"></span>Museum of Life &amp; Science (Durham)</li>
+          <li><span class="dot"></span>Marbles Kids Museum</li>
+          <li><span class="dot"></span>Fantasy Lake</li>
+          <li><span class="dot"></span>Art Museum walk (NCMA Park)</li>
+          <li><span class="dot"></span>Pullen Park paddle boats</li>
+          <li><span class="dot"></span>Durant Nature Preserve</li>
+          <li><span class="dot"></span>Annie Louise Wilkerson Nature Preserve</li>
+          <li><span class="dot"></span>Hemlock Bluffs (Cary)</li>
+          <li><span class="dot"></span>Lake Johnson Park</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TUESDAY -->
+    <div class="day-card tue">
+      <div class="day-top"><div class="day-emoji">&#128214;</div><div><div class="day-name">Tuesday</div><h3>Reading &amp; Phonics</h3></div></div>
+      <div class="day-body">
+        <span class="tag">Learning Day</span>
+        <ul class="act-list">
+          <li><span class="dot"></span>Phonics flash cards &amp; games</li>
+          <li><span class="dot"></span>Sight word puzzles &amp; CVC word practice</li>
+          <li><span class="dot"></span>Magnetic letter spelling activities</li>
+          <li><span class="dot"></span>Reading comprehension exercises</li>
+          <li><span class="dot"></span>Library trip (rotate locations)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY -->
+    <div class="day-card wed">
+      <div class="day-top"><div class="day-emoji">&#129518;</div><div><div class="day-name">Wednesday</div><h3>Swim &amp; Science</h3></div></div>
+      <div class="day-body">
+        <span class="tag">Active + Discovery</span>
+        <ul class="act-list">
+          <li><span class="dot"></span>Swimming &amp; water play</li>
+          <li><span class="dot"></span>KiwiCo science / craft kit</li>
+          <li><span class="dot"></span>Backyard experiments</li>
+          <li><span class="dot"></span>Nature scavenger hunts</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- THURSDAY -->
+    <div class="day-card thu">
+      <div class="day-top"><div class="day-emoji">&#9999;&#65039;</div><div><div class="day-name">Thursday</div><h3>Reading &amp; Writing</h3></div></div>
+      <div class="day-body">
+        <span class="tag">Workbook Day</span>
+        <ul class="act-list">
+          <li><span class="dot"></span>Phonics &amp; word building (Lakeshore kit)</li>
+          <li><span class="dot"></span>Wipe-clean first grade workbook</li>
+          <li><span class="dot"></span>Reading comprehension</li>
+          <li><span class="dot"></span>Sight word games (Word Pop, puzzle pieces)</li>
+          <li><span class="dot"></span>Letter tracing &amp; handwriting practice</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FRIDAY -->
+    <div class="day-card fri">
+      <div class="day-top"><div class="day-emoji">&#127946;</div><div><div class="day-name">Friday</div><h3>Swim &amp; Pool Fun</h3></div></div>
+      <div class="day-body">
+        <span class="tag">Fun Friday</span>
+        <ul class="act-list">
+          <li><span class="dot"></span>Pool day &amp; free swim</li>
+          <li><span class="dot"></span>Diving treasure hunts</li>
+          <li><span class="dot"></span>Ring toss &amp; swim challenges</li>
+          <li><span class="dot"></span>Underwater number scavenger hunt</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SIGN-UP ACTIVITIES ==================== -->
+<div class="section" id="signups">
+  <div class="section-header">
+    <h2>Sign-Up Activities</h2>
+    <p>These need registration, booking, or sign-up ahead of time. Research and lock these in early &mdash; summer spots fill fast.</p>
+  </div>
+
+  <div class="signup-grid">
+
+    <div class="signup-card climbing">
+      <h4>Triangle Rock Club</h4>
+      <div class="location">Raleigh &amp; Morrisville &bull; Ages 5+</div>
+      <div class="detail">Youth climbing programs, &ldquo;First Ascents&rdquo; beginner classes, and summer camps. Two locations in the Triangle. Great for a 5-6 year old first-timer.</div>
+      <span class="action-tag book">Book Now &mdash; Fills Fast</span><br><br>
+      <a href="https://www.trianglerockclub.com/" target="_blank">trianglerockclub.com &rarr;</a>
+    </div>
+
+    <div class="signup-card horses">
+      <h4>Dead Broke Farm</h4>
+      <div class="location">Raleigh &bull; Ages 3+ &bull; 110 acres</div>
+      <div class="detail">Private lessons, pony rides, and summer horseback riding camps for ages 5+. No prior experience needed. Real farm setting, not a ring. She&rsquo;ll love it.</div>
+      <span class="action-tag book">Book Now &mdash; Fills Fast</span><br><br>
+      <a href="https://deadbrokefarm.com/" target="_blank">deadbrokefarm.com &rarr;</a>
+    </div>
+
+    <div class="signup-card gymnastics">
+      <h4>Gymcarolina Gymnastics</h4>
+      <div class="location">Raleigh &bull; Ages 3+</div>
+      <div class="detail">Preschool &amp; intro classes, plus full summer camps (ages 5+). Great structure for active kids. Multiple class times available.</div>
+      <span class="action-tag research">Research Options</span><br><br>
+      <a href="https://www.gymcarolina.com/" target="_blank">gymcarolina.com &rarr;</a>
+    </div>
+
+    <div class="signup-card gymnastics">
+      <h4>The Little Gym</h4>
+      <div class="location">North Raleigh / Wake Forest &bull; Ages 3-10</div>
+      <div class="detail">Summer camps with gymnastics, active play, and age-appropriate skill building. Fun-first approach, good for a kid who hasn&rsquo;t done structured gym before.</div>
+      <span class="action-tag research">Research Options</span><br><br>
+      <a href="https://www.thelittlegym.com/" target="_blank">thelittlegym.com &rarr;</a>
+    </div>
+
+    <div class="signup-card cooking">
+      <h4>Flour Power Kids Cooking Studios</h4>
+      <div class="location">North Hills &amp; Falls River &bull; Ages 5-8</div>
+      <div class="detail">&ldquo;Lil&rsquo; Chef&rdquo; summer camps and individual classes. Hands-on cooking, kitchen safety, themed sessions. Pick 4, 6, or 8 classes and use on your schedule.</div>
+      <span class="action-tag book">Book Now &mdash; Fills Fast</span><br><br>
+      <a href="https://www.flourpowerstudios.com/" target="_blank">flourpowerstudios.com &rarr;</a>
+    </div>
+
+    <div class="signup-card art">
+      <h4>Pullen Arts Center</h4>
+      <div class="location">Raleigh (Pullen Park area) &bull; Ages 5+</div>
+      <div class="detail">City of Raleigh art classes: pottery, painting, drawing, printmaking, jewelry, bookmaking. Summer workshops available. Right next to Pullen Park.</div>
+      <span class="action-tag research">Research Options</span><br><br>
+      <a href="https://www.raleighnc.gov/arts/places/pullen-arts-center" target="_blank">raleighnc.gov &rarr;</a>
+    </div>
+
+    <div class="signup-card dance">
+      <h4>YMCA Dance &amp; Swim</h4>
+      <div class="location">Multiple Triangle locations &bull; Ages 5+</div>
+      <div class="detail">Ballet, swim lessons, and general youth programs. Membership gets access to multiple activities. Good bang for the buck if you want a couple things in one spot.</div>
+      <span class="action-tag research">Research Options</span><br><br>
+      <a href="https://www.ymcaofthetriangle.org/" target="_blank">ymcaofthetriangle.org &rarr;</a>
+    </div>
+
+    <div class="signup-card swim">
+      <h4>Cary Parks &amp; Rec Swim Lessons</h4>
+      <div class="location">Multiple Cary locations &bull; Ages 5+</div>
+      <div class="detail">Group swim lessons through the town. Affordable, structured, good for building real swimming skills over the summer.</div>
+      <span class="action-tag research">Research Options</span><br><br>
+      <a href="https://www.townofcary.org/" target="_blank">townofcary.org &rarr;</a>
+    </div>
+
+    <div class="signup-card cooking">
+      <h4>KiwiCo Subscription</h4>
+      <div class="location">Delivered to your door &bull; Ages 6-9</div>
+      <div class="detail">Monthly science/craft kits. Perfect for Wednesday science days. Each box is a self-contained project with everything included. No prep for Emma.</div>
+      <span class="action-tag book">Subscribe</span><br><br>
+      <a href="https://www.kiwico.com/us/store/cp/6-9-years-old" target="_blank">kiwico.com &rarr;</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== OUTDOOR SPOTS ==================== -->
+<div class="section" id="outdoors">
+  <div class="section-header">
+    <h2>Outdoor Spots &amp; Day Trips</h2>
+    <p>No sign-up needed. Rotate through these on Mondays or whenever the weather&rsquo;s good.</p>
+  </div>
+
+  <div class="spots-grid">
+    <div class="spot-card"><span class="free-tag">Free</span><h4>Dorothea Dix Park</h4><p>Wide open fields, great skyline views, perfect for running around and picnics.</p></div>
+    <div class="spot-card"><span class="free-tag">Free</span><h4>Pullen Park</h4><p>Paddle boats, train ride, playground, carousel. Classic Raleigh kid spot. Small fees for rides.</p></div>
+    <div class="spot-card"><span class="free-tag">Free</span><h4>NCMA Park &amp; Trails</h4><p>Art-filled nature trails, wooden boardwalks, outdoor sculptures. Easy walking for little legs.</p></div>
+    <div class="spot-card"><span class="free-tag">Free</span><h4>Durant Nature Preserve</h4><p>&ldquo;Secret&rdquo; creek trails, fishing, natural play areas, fairy house building. North Raleigh gem.</p></div>
+    <div class="spot-card"><span class="free-tag">Free</span><h4>Annie Louise Wilkerson Preserve</h4><p>Rocky outcrops, short kid-friendly trails, nature exploration. Feels like a mini adventure.</p></div>
+    <div class="spot-card"><span class="free-tag">Free</span><h4>Lake Johnson Park</h4><p>Paved trails great for little walkers. Beautiful lake views. Easy and chill.</p></div>
+    <div class="spot-card"><span class="free-tag">Free</span><h4>Hemlock Bluffs (Cary)</h4><p>Wooden boardwalks through cool hemlock forest. Nature center on-site. Educational and pretty.</p></div>
+    <div class="spot-card"><span class="free-tag">Free</span><h4>Laurel Hills Park</h4><p>Playground, open fields, shaded trails. Solid neighborhood park for low-key days.</p></div>
+    <div class="spot-card"><h4>NC Museum of Natural Sciences</h4><p>Downtown Raleigh. Free general admission. Dinosaurs, live animals, nature exhibits. Huge hit with kids.</p></div>
+    <div class="spot-card"><h4>Museum of Life &amp; Science</h4><p>Durham. Outdoor science park, splash pad, butterfly house. Worth the drive. Paid admission.</p></div>
+    <div class="spot-card"><h4>Marbles Kids Museum</h4><p>Downtown Raleigh. Interactive exhibits built for this age. IMAX theater too. Paid admission.</p></div>
+    <div class="spot-card"><h4>Fantasy Lake</h4><p>Water park vibes. Good for a full morning outing on hot days.</p></div>
+  </div>
+</div>
+
+<!-- ==================== SHOPPING LIST ==================== -->
+<div class="section" id="shopping">
+  <div class="section-header">
+    <h2>Shopping List</h2>
+    <p>Everything Emma recommended, consolidated. Check off as you order.</p>
+  </div>
+
+  <div class="shop-category">
+    <h4>Reading &amp; Phonics</h4>
+    <ul class="shop-list">
+      <li><input type="checkbox"><span class="item-name">Phonics Flash Cards (Sinoome)</span><a href="https://www.amazon.com/dp/B0FR8ST88T" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">QUOKKA Reading Flash Cards</span><a href="https://www.amazon.com/dp/B0D811ZH8F" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">Reading Activities Kit (Gojmzo)</span><a href="https://www.amazon.com/dp/B0C1SV9S2P" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">Magnetic Flashcards (Montessori)</span><a href="https://www.amazon.com/dp/B0BGGRTJBR" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">Lakeshore All-in-One Magnetic Phonics Kit</span><a href="https://www.lakeshorelearning.com/products/language/phonics-word-building/all-in-one-magnetic-phonics-kit-/p/EE755/" target="_blank">Lakeshore &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">Sight Word Puzzle Pieces (Learning Resources)</span><a href="https://www.amazon.com/dp/B01NCNLLWD" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">Word Pop CVC Words Game</span><a href="https://www.amazon.com/dp/B0B9T8PS6X" target="_blank">Amazon &rarr;</a></li>
+    </ul>
+  </div>
+
+  <div class="shop-category">
+    <h4>Workbooks &amp; Writing</h4>
+    <ul class="shop-list">
+      <li><input type="checkbox"><span class="item-name">Wipe-Clean First Grade Workbook</span><a href="https://www.amazon.com/dp/B0F256LSL8" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">1st Grade Reading Comprehension (Kickstart)</span><a href="https://www.amazon.com/dp/B0FDSPS5P1" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">Summer Before 1st Grade Bridge Workbook</span><a href="https://www.amazon.com/dp/1680529943" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">My First Learn-to-Write Workbook</span><a href="https://www.amazon.com/dp/1641526270" target="_blank">Amazon &rarr;</a></li>
+    </ul>
+  </div>
+
+  <div class="shop-category">
+    <h4>Pool &amp; Swim Toys</h4>
+    <ul class="shop-list">
+      <li><input type="checkbox"><span class="item-name">Diving Toys Set (Octopus, Torpedo, etc.)</span><a href="https://www.amazon.com/dp/B0BRTVK3RS" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">Diving Numbers Scavenger Set</span><a href="https://www.amazon.com/dp/B0GGQQCJ64" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">Skillmatics Ring Rush Diving Toys</span><a href="https://www.amazon.com/dp/B0CTMTVP54" target="_blank">Amazon &rarr;</a></li>
+      <li><input type="checkbox"><span class="item-name">JOYIN Underwater Treasure Hunt</span><a href="https://www.amazon.com/dp/B0DNJK4QXR" target="_blank">Amazon &rarr;</a></li>
+    </ul>
+  </div>
+
+  <div class="shop-category">
+    <h4>Science &amp; Craft Kits</h4>
+    <ul class="shop-list">
+      <li><input type="checkbox"><span class="item-name">KiwiCo Subscription (Ages 6-9)</span><a href="https://www.kiwico.com/us/store/cp/6-9-years-old" target="_blank">KiwiCo &rarr;</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== NOTES ==================== -->
+<div class="section" id="notes">
+  <div class="section-header">
+    <h2>Notes &amp; Ideas</h2>
+    <p>Dump anything here &mdash; playdates, birthday party ideas, camp weeks, stuff to look into.</p>
+  </div>
+
+  <div class="notes-box">
+    <h3>Birthday Week (June 28)</h3>
+    <textarea class="notes-area" placeholder="Party plans, special outing, friend invites..."></textarea>
+  </div>
+
+  <div class="notes-box">
+    <h3>Sign-Up Deadlines &amp; To-Dos</h3>
+    <textarea class="notes-area" placeholder="What needs to be booked and by when..."></textarea>
+  </div>
+
+  <div class="notes-box">
+    <h3>General Notes</h3>
+    <textarea class="notes-area" placeholder="Anything else — vacation weeks, family visits, schedule changes..."></textarea>
+  </div>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
